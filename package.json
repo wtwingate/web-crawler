@@ -20,5 +20,8 @@
   "devDependencies": {
     "jest": "^29.7.0",
     "prettier": "3.2.5"
+  },
+  "dependencies": {
+    "jsdom": "^24.0.0"
   }
 }

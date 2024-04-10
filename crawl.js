@@ -1,4 +1,6 @@
 const url = require("node:url");
+const jsdom = require("jsdom");
+const { JSDOM } = jsdom;
 
 function normalizeURL(urlString) {
   try {
@@ -11,6 +13,21 @@ function normalizeURL(urlString) {
   }
 }
 
+function getURLsFromHTML(htmlBody, baseURL) {
+  const dom = new JSDOM(htmlBody);
+  const links = dom.window.document.querySelectorAll("a");
+  const urls = [];
+  for (const link of links) {
+    if (link.href.includes(baseURL)) {
+      urls.push(link.href);
+    } else {
+      urls.push(`${baseURL}${link.href}`);
+    }
+  }
+  return urls;
+}
+
 module.exports = {
   normalizeURL,
+  getURLsFromHTML,
 };
