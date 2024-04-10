@@ -2,14 +2,24 @@ const url = require("node:url");
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 
-function normalizeURL(urlString) {
+async function crawlPage(currentURL) {
+  console.log(`Crawling ${currentURL}...`);
   try {
-    const urlObject = new URL(urlString);
-    const urlHost = urlObject.host;
-    const urlPath = urlObject.pathname.replace(/\/$/, "");
-    return `${urlHost}${urlPath}`;
-  } catch {
-    return null;
+    response = await fetch(currentURL);
+    if (!response.ok) {
+      console.log(
+        `Error: server responded with status code ${response.status}.`,
+      );
+      return;
+    }
+    if (!response.headers.get("content-type").includes("text/html")) {
+      console.log("Error: invalid content type.");
+      return;
+    }
+    htmlString = await response.text();
+    console.log(htmlString);
+  } catch (err) {
+    console.log(err.message);
   }
 }
 
@@ -26,8 +36,19 @@ function getURLsFromHTML(htmlBody, baseURL) {
   }
   return urls;
 }
+function normalizeURL(urlString) {
+  try {
+    const urlObject = new url.URL(urlString);
+    const urlHost = urlObject.host;
+    const urlPath = urlObject.pathname.replace(/\/$/, "");
+    return `${urlHost}${urlPath}`;
+  } catch {
+    return null;
+  }
+}
 
 module.exports = {
-  normalizeURL,
+  crawlPage,
   getURLsFromHTML,
+  normalizeURL,
 };
