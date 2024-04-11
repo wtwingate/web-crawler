@@ -12,7 +12,9 @@ async function main() {
   }
   const baseURL = argv[2];
   console.log(`Starting web crawler at ${baseURL}...`);
-  await crawlPage(baseURL);
+  const pages = {};
+  const results = await crawlPage(baseURL, baseURL, pages);
+  console.log(results);
 }
 
 main();
