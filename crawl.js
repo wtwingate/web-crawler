@@ -57,10 +57,10 @@ function getURLsFromHTML(htmlBody, baseURL) {
   const links = dom.window.document.querySelectorAll("a");
   const urls = [];
   for (const link of links) {
-    if (link.href.includes(baseURL)) {
-      urls.push(link.href);
-    } else {
+    if (link.href.slice(0, 1) === "/") {
       urls.push(`${baseURL}${link.href}`);
+    } else {
+      urls.push(link.href);
     }
   }
   return urls;
